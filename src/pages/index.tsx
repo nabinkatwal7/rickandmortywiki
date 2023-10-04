@@ -1,6 +1,8 @@
+import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
+import { relative } from "path";
 
 const defaultEndpoint = `https://rickandmortyapi.com/api/character/`;
 
@@ -89,12 +91,30 @@ export default function Home({ data }) {
   return (
     <div className="container">
       <Head>
-        <title>Create Next App</title>
+        <title>Rick and Morty Character Wiki</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main>
-        <h1 className="title">Wubba Lubba Dub Dub!</h1>
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {
+              scale: 0.8,
+              opacity: 0,
+            },
+            visible: {
+              scale: 1,
+              opacity: 1,
+              transition: {
+                delay: 0.4,
+              },
+            },
+          }}
+        >
+          <h1 className="title">Wubba Lubba Dub Dub!</h1>
+        </motion.div>
 
         <p className="description">Rick and Morty Character Wiki</p>
 
@@ -107,12 +127,31 @@ export default function Home({ data }) {
           {results.map((result) => {
             const { id, name, image } = result;
             return (
-              <li key={id} className="card">
+              <motion.li
+                key={id}
+                className="card"
+                whileHover={{
+                  position: relative,
+                  zIndex: 1,
+                  background: "white",
+                  scale: [1, 1.4, 1.2],
+                  rotate: [0, 10, -10, 0],
+                  filter: [
+                    "hue-rotate(0) contrast(100%)",
+                    "hue-rotate(360deg) contrast(200%)",
+                    "hue-rotate(45deg) contrast(300%)",
+                    "hue-rotate(0) contrast(100%)",
+                  ],
+                  transition: {
+                    duration: 0.2,
+                  },
+                }}
+              >
                 <Link href="/character/[id]" as={`/character/${id}`}>
                   <img src={image} alt={`${name} Thumbnail`} />
                   <h3>{name}</h3>
                 </Link>
-              </li>
+              </motion.li>
             );
           })}
         </ul>
@@ -122,7 +161,7 @@ export default function Home({ data }) {
         </p>
       </main>
 
-      <style jsx>{`
+      <style>{`
         .container {
           min-height: 100vh;
           padding: 0 0.5rem;
